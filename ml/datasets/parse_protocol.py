@@ -23,8 +23,8 @@ def build_filepath(utterance_id, audio_dir, extension=".flac"):
 
 if __name__ == "__main__":
     # Update these paths once your dataset is downloaded and unzipped
-    PROTOCOL_PATH = "data/ASVspoof2019/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
-    AUDIO_DIR = "data/ASVspoof2019/LA/ASVspoof2019_LA_train/flac"
+    PROTOCOL_PATH = "data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+    AUDIO_DIR = "data/LA/ASVspoof2019_LA_train/flac"
 
     if not os.path.exists(PROTOCOL_PATH):
         print(f"Protocol file not found yet at: {PROTOCOL_PATH}")

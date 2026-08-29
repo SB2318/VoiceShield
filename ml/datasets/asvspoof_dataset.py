@@ -27,8 +27,8 @@ class ASVspoofDataset(Dataset):
 
 
 if __name__ == "__main__":
-    PROTOCOL_PATH = "data/ASVspoof2019/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
-    AUDIO_DIR = "data/ASVspoof2019/LA/ASVspoof2019_LA_train/flac"
+    PROTOCOL_PATH = "data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+    AUDIO_DIR = "data/LA/ASVspoof2019_LA_train/flac"
 
     if not os.path.exists(PROTOCOL_PATH):
         print("Dataset not extracted yet — update paths above once unzip finishes, then rerun.")
