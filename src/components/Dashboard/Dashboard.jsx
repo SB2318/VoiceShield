@@ -2,6 +2,7 @@ import { useState } from "react";
 import { mockCallFeed, mockMetrics } from "../../mocks/decisionMock";
 import CallFeedRow from "./CallFeedRow";
 import MetricsPanel from "./MetricsPanel";
+import CodecChart from "./CodecChart";
 
 function Dashboard() {
   const [feed, setFeed] = useState(mockCallFeed);
@@ -16,6 +17,7 @@ function Dashboard() {
       <h1 className="text-2xl font-bold">Analyst Dashboard</h1>
 
       <MetricsPanel metrics={mockMetrics} />
+      <CodecChart />
 
       <div>
         <h2 className="text-slate-400 text-sm uppercase tracking-wide mb-3">Live Flagged Calls</h2>
