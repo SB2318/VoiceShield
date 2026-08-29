@@ -6,9 +6,10 @@
   "directories": {
     "test": "test"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "reset": "node -e \"require('fs').writeFileSync('data/chain.json', '[]')\""
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
