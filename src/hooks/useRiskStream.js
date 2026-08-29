@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { mockDecision } from "../mocks/decisionMock";
 
-const USE_MOCK = true; // flip to false once a real backend URL exists
-const SOCKET_URL = "ws://localhost:8000/ws/risk-stream"; // placeholder — Backend 2 gives you the real one
+const USE_MOCK = true;
+const SOCKET_URL = "ws://localhost:8000/ws/risk-stream";
 
 export function useRiskStream() {
   const [decision, setDecision] = useState(mockDecision);
+  const [status, setStatus] = useState(USE_MOCK ? "mock" : "connecting"); // mock | connecting | connected | error
   const wsRef = useRef(null);
 
   useEffect(() => {
     if (USE_MOCK) {
-      // Simulate live updates the same way CallScreen already did
       const interval = setInterval(() => {
         setDecision((prev) => {
           const jitter = (Math.random() - 0.5) * 0.05;
@@ -21,23 +21,25 @@ export function useRiskStream() {
       return () => clearInterval(interval);
     }
 
-    // Real WebSocket path — activates once USE_MOCK is false
     const ws = new WebSocket(SOCKET_URL);
     wsRef.current = ws;
+
+    ws.onopen = () => setStatus("connected");
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setDecision(data); // backend must send an object matching the Section 2 contract
+        setDecision(data);
       } catch (err) {
         console.error("Failed to parse risk stream message:", err);
       }
     };
 
-    ws.onerror = (err) => console.error("WebSocket error:", err);
+    ws.onerror = () => setStatus("error");
+    ws.onclose = () => setStatus("error");
 
     return () => ws.close();
   }, []);
 
-  return decision;
+  return { decision, status };
 }

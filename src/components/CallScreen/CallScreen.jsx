@@ -5,10 +5,9 @@ import ChallengeCard from "../Challenge/ChallengeCard";
 import PanicCard from "../PanicMode/PanicCard";
 
 function CallScreen({ embedded = false }) {
-  const decision = useRiskStream();
+  const { decision, status } = useRiskStream();   // ← must come FIRST
   const [showPanic, setShowPanic] = useState(false);
-  const risk = riskConfig[decision.decision];
-
+  const risk = riskConfig[decision.decision];      // ← uses decision AFTER it's declared
   return (
     <div className={
       embedded
@@ -16,6 +15,12 @@ function CallScreen({ embedded = false }) {
         : "min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-6 p-6"
     }>
       <p className="text-slate-400 text-sm">Incoming call</p>
+      {status === "error" && (
+  <p className="text-red-400 text-xs">⚠ Connection lost — showing last known state</p>
+)}
+{status === "connecting" && (
+  <p className="text-slate-500 text-xs">Connecting to detection service…</p>
+)}
       <h1 className="text-2xl font-semibold">{decision.number}</h1>
 
       <span className={`px-4 py-1 rounded-full text-sm font-medium ${risk.color}`}>
