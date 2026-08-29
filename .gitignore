@@ -244,3 +244,4 @@ __marimo__/
 .streamlit/secrets.toml
 >>>>>>> 763622acdd5c5bc387beb83516402422734beaf3
 ml/data/
+*.onnx
