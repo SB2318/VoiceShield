@@ -1,20 +1,27 @@
-<<<<<<< HEAD
-# React + Vite
+# VoiceShield — Frontend (SIH26104)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Real-time voice-clone detection UI: live call screening, liveness challenges,
+panic-aware response, and an analyst dashboard.
 
-Currently, two official plugins are available:
+## Views
+- **Call Screen** — live confidence score, risk badge, XAI branch breakdown
+- **Challenge** — cough/laugh/hum, phrase, and semantic liveness checks
+- **Panic Mode** — safe-word setup, guided verification, cooldown timer
+- **Dashboard** — analyst live feed, case overrides, EER/latency metrics, codec-collapse chart
+- **Demo Shell** — phone-frame mock of the banking-app stage demo
+- **Elderly Mode** — large-text, single-action variant
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
 
-## React Compiler
+## Integration
+All views consume a single hook, `src/hooks/useRiskStream.js`, which currently
+serves mock data matching the shared decision contract. To connect a real
+backend, set `USE_MOCK = false` and point `SOCKET_URL` at the WebSocket endpoint —
+no component changes needed.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
-=======
-# VoiceShield
->>>>>>> 763622acdd5c5bc387beb83516402422734beaf3
+## Status
+Frontend UI complete against the team execution plan. Backend integration pending.
