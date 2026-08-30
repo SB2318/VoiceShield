@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { mockDecision } from "../mocks/decisionMock";
 
-const USE_MOCK = true;
-const SOCKET_URL = "ws://localhost:8000/ws/risk-stream";
+const USE_MOCK = false;
+const SOCKET_URL = "ws://localhost:8002/ws/risk-stream"; // was 8000
 
 export function useRiskStream() {
   const [decision, setDecision] = useState(mockDecision);
