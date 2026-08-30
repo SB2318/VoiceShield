@@ -3,6 +3,8 @@ import { useRiskStream } from "../../hooks/useRiskStream";
 import { riskConfig } from "./riskConfig";
 import ChallengeCard from "../Challenge/ChallengeCard";
 import PanicCard from "../PanicMode/PanicCard";
+import BranchBreakdown from "./BranchBreakdown";
+
 
 function CallScreen({ embedded = false }) {
   const { decision, status } = useRiskStream();   // ← must come FIRST
@@ -43,6 +45,7 @@ function CallScreen({ embedded = false }) {
         challengeType={decision.challenge_type}
         onResult={(res) => console.log("Challenge result:", res)}
       />
+        <BranchBreakdown branchScores={decision.branch_scores} />
 
       {!showPanic ? (
         <button
