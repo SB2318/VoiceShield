@@ -50,15 +50,17 @@ async def detect(file: UploadFile = File(...)):
     else:
         decision = "suspected_clone"
 
+    weights = attn_weights[0].tolist()  # [raw_weight, lfcc_weight, ssl_weight]
+
     return {
         "branch_scores": {
-            "rawnet2": None,   # per-branch raw scores can be added once agreement gate is wired in
-            "spectrogram": None,
-            "ssl": None,
+            "rawnet2": round(weights[0], 4),
+            "spectrogram": round(weights[1], 4),
+            "ssl": round(weights[2], 4),
         },
         "fused_score": probs[0, 1].item(),
         "decision": decision,
-        "explanation": f"Model confidence: {confidence_val:.2%}",
+        "explanation": f"Model confidence: {confidence_val:.2%}. Branch trust weights show which detection view most influenced this result.",
     }
 
 @app.get("/health")
