@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -23,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-=======
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -242,4 +241,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
->>>>>>> 763622acdd5c5bc387beb83516402422734beaf3
+
+# Project-specific: datasets and model artifacts — never commit these
+data/
+ml/data/
+*.flac
+*.wav
+*.onnx
+*.onnx.data
+*.pt
+*.pth
