@@ -8,32 +8,44 @@ function ChallengeCard({ challengeType, onResult }) {
   if (challengeType === "none") return null;
 
   return (
-    <div className="w-80 bg-slate-800 rounded-xl p-5 flex flex-col items-center gap-4 border border-slate-700">
-      <p className="text-slate-400 text-xs uppercase tracking-wide">{challenge.title}</p>
-      <p className="text-white text-center font-medium">{challenge.prompt}</p>
+    <div className="w-full max-w-xs bg-[#131826] border border-[#232B3D] rounded-xl p-5 flex flex-col items-center gap-4 shadow-lg shadow-black/30">
+      <p className="text-[10px] font-semibold tracking-[0.15em] text-[#8993A8] uppercase">
+        {challenge.title}
+      </p>
+
+      <p className="text-[#E8ECF4] text-center font-medium leading-snug">
+        {challenge.prompt}
+      </p>
 
       {result === "not_triggered" && (
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full">
           <button
             onClick={() => { setResult("pass"); onResult?.("pass"); }}
-            className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-medium"
+            className="flex-1 px-4 py-2 bg-emerald-600/90 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors"
           >
-            Simulate Pass
+            Simulate pass
           </button>
           <button
             onClick={() => { setResult("fail"); onResult?.("fail"); }}
-            className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-medium"
+            className="flex-1 px-4 py-2 bg-red-600/90 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors"
           >
-            Simulate Fail
+            Simulate fail
           </button>
         </div>
       )}
 
       {result === "pass" && (
-        <p className="text-green-400 font-semibold">✅ Challenge passed</p>
+        <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          Challenge passed
+        </div>
       )}
+
       {result === "fail" && (
-        <p className="text-red-400 font-semibold">❌ Challenge failed</p>
+        <div className="flex items-center gap-2 text-red-400 font-semibold text-sm">
+          <span className="w-2 h-2 rounded-full bg-red-400" />
+          Challenge failed
+        </div>
       )}
     </div>
   );
