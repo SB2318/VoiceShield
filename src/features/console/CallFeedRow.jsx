@@ -1,39 +1,22 @@
 import { riskConfig } from "../call/riskConfig";
+import { Badge } from "../../ui/Badge";
+import { Button } from "../../ui/Button";
 
 function CallFeedRow({ call, onOverride }) {
   const risk = riskConfig[call.decision];
-
   return (
-    <div className="flex items-center justify-between bg-slate-800 rounded-lg px-4 py-3 border border-slate-700">
+    <div className="glass rounded-2xl px-5 py-4 flex items-center justify-between shadow-[0_4px_20px_-10px_rgba(61,64,91,0.15)] card-hover">
       <div>
-        <p className="text-white text-sm font-medium">{call.number}</p>
-        <p className="text-slate-500 text-xs">{call.call_id}</p>
+        <p className="text-ink text-sm font-semibold font-mono">{call.number}</p>
+        <p className="text-ink-faint text-xs mt-0.5">{call.call_id}</p>
       </div>
-
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${risk.color}`}>
-        {risk.label}
-      </span>
-
-      <p className="text-slate-300 text-sm w-16 text-right">
-        {(call.fused_score * 100).toFixed(0)}%
-      </p>
-
+      <Badge tone={risk.tone}>{risk.label}</Badge>
+      <p className="text-ink text-sm w-16 text-right font-mono font-semibold">{(call.fused_score * 100).toFixed(0)}%</p>
       <div className="flex gap-2">
-        <button
-          onClick={() => onOverride?.(call.call_id, "confirmed")}
-          className="px-3 py-1 bg-green-700 hover:bg-green-600 rounded-md text-xs"
-        >
-          Confirm
-        </button>
-        <button
-          onClick={() => onOverride?.(call.call_id, "overridden")}
-          className="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded-md text-xs"
-        >
-          Override
-        </button>
+        <Button variant="sage" className="!px-3 !py-1.5 !text-xs" onClick={() => onOverride?.(call.call_id, "confirmed")}>Confirm</Button>
+        <Button variant="outline" className="!px-3 !py-1.5 !text-xs" onClick={() => onOverride?.(call.call_id, "overridden")}>Override</Button>
       </div>
     </div>
   );
 }
-
 export default CallFeedRow;

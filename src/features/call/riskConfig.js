@@ -1,6 +1,6 @@
 export const riskConfig = {
-  real: { label: "Verified", color: "bg-green-500" },
-  unverified: { label: "Unverified", color: "bg-yellow-500" },
-  suspected_clone: { label: "Suspected Clone", color: "bg-orange-500" },
-  speaker_mismatch: { label: "Speaker Mismatch", color: "bg-red-500" },
+  real:             { label: "Verified",        tone: "verified" },
+  unverified:       { label: "Unverified",       tone: "caution" },
+  suspected_clone:  { label: "Suspected clone",  tone: "alert" },
+  speaker_mismatch: { label: "Not your contact", tone: "severe" },
 };
