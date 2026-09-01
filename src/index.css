@@ -1,1 +1,47 @@
 @import "tailwindcss";
+
+@theme {
+  --color-canvas:        #0B1418;
+  --color-surface:       #121F25;
+  --color-raised:        #182A32;
+  --color-hairline:      #22383F;
+
+  --color-ink:           #E8EFF1;
+  --color-ink-soft:      #94A9B2;
+  --color-ink-faint:     #5D737D;
+
+  --color-verdigris:      #3FB8A6;
+  --color-verdigris-deep: #2E8C7E;
+  --color-gold:           #D9A441;
+  --color-clay:           #D4705F;
+  --color-clay-deep:      #B04A3C;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  ::selection { background: var(--color-verdigris); color: var(--color-canvas); }
+}
+
+@layer utilities {
+  /* One atmospheric wash. Used once, behind the demo shell. Do not scatter it. */
+  .bg-harbour {
+    background-image:
+      radial-gradient(60rem 40rem at 15% -10%, rgba(63,184,166,0.10), transparent 60%),
+      radial-gradient(50rem 35rem at 85% 110%, rgba(217,164,65,0.06), transparent 60%);
+  }
+  .label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+}
