@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { mockDecision } from "../mocks/decisionMock";
+import { mockDecision } from "../fixtures/decisions";
 
 const USE_MOCK = false;
 const SOCKET_URL = "ws://localhost:8002/ws/risk-stream"; // was 8000

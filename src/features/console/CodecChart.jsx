@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from "recharts";
-import { codecCollapseData } from "../../mocks/codecMock";
+import { codecCollapseData } from "../../fixtures/codec";
 
 function CodecChart() {
   return (

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useRiskStream } from "../../hooks/useRiskStream";
 import { riskConfig } from "./riskConfig";
-import ChallengeCard from "../Challenge/ChallengeCard";
-import PanicCard from "../PanicMode/PanicCard";
+import ChallengeCard from "../challenge/ChallengeCard";
+import PanicCard from "../panic/PanicCard";
 import BranchBreakdown from "./BranchBreakdown";
 
 function CallScreen({ embedded = false }) {

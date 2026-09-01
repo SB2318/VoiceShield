@@ -1,5 +1,5 @@
 import PhoneFrame from "./PhoneFrame";
-import CallScreen from "../CallScreen/CallScreen";
+import CallScreen from "../call/CallScreen";
 import ConsentBanner from "./ConsentBanner";
 
 function DemoShell() {

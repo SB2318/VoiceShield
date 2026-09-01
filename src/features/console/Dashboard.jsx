@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { mockCallFeed, mockMetrics } from "../../mocks/decisionMock";
+import { mockCallFeed, mockMetrics } from "../../fixtures/decisions";
 import CallFeedRow from "./CallFeedRow";
 import MetricsPanel from "./MetricsPanel";
 import CodecChart from "./CodecChart";

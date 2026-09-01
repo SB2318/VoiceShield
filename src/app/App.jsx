@@ -1,8 +1,8 @@
 import { useState } from "react";
-import CallScreen from "./components/CallScreen/CallScreen";
-import Dashboard from "./components/Dashboard/Dashboard";
-import DemoShell from "./components/DemoShell/DemoShell";
-import ElderlyCallScreen from "./components/ElderlyMode/ElderlyCallScreen";
+import CallScreen from "../features/call/CallScreen";
+import Dashboard from "../features/console/Dashboard";
+import DemoShell from "../features/device/DemoShell";
+import ElderlyCallScreen from "../features/elderly/ElderlyCallScreen";
 
 function App() {
   const [view, setView] = useState("call");

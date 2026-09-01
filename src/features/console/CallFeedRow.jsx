@@ -1,4 +1,4 @@
-import { riskConfig } from "../CallScreen/riskConfig";
+import { riskConfig } from "../call/riskConfig";
 
 function CallFeedRow({ call, onOverride }) {
   const risk = riskConfig[call.decision];

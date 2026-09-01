@@ -1,5 +1,5 @@
-import { mockDecision } from "../../mocks/decisionMock";
-import { riskConfig } from "../CallScreen/riskConfig";
+import { mockDecision } from "../../fixtures/decisions";
+import { riskConfig } from "../call/riskConfig";
 
 function ElderlyCallScreen() {
   const risk = riskConfig[mockDecision.decision];
