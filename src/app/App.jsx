@@ -3,10 +3,14 @@ import CallScreen from "../features/call/CallScreen";
 import Dashboard from "../features/console/Dashboard";
 import DemoShell from "../features/device/DemoShell";
 import ElderlyCallScreen from "../features/elderly/ElderlyCallScreen";
+import WhatsAppBotDemo from "../features/whatsapp/WhatsAppBotDemo";
+import VerifiedCallbackFlow from "../features/callback/VerifiedCallbackFlow";
 
 const TABS = [
   { key: "call", label: "Call Screen" },
+  { key: "callback", label: "Verified Callback" },
   { key: "dashboard", label: "Dashboard" },
+  { key: "whatsapp", label: "WhatsApp Bot" },
   { key: "demo", label: "Demo Shell" },
   { key: "elderly", label: "Elderly Mode" },
 ];
@@ -31,7 +35,9 @@ function App() {
       </nav>
       <div className="pt-6">
         {view === "call" && <CallScreen />}
+         {view === "callback" && <VerifiedCallbackFlow />}
         {view === "dashboard" && <Dashboard />}
+        {view === "whatsapp" && <WhatsAppBotDemo />}
         {view === "demo" && <DemoShell />}
         {view === "elderly" && <ElderlyCallScreen />}
       </div>
