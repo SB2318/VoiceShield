@@ -1,45 +1,95 @@
 import { useState, useEffect, useRef } from "react";
-import { mockDecision } from "../fixtures/decisions";
+
+import {
+  mockDecision,
+  demoRealDecision,
+  demoCloneDecision
+} from "../fixtures/decisions";
 
 const USE_MOCK = false;
-const SOCKET_URL = "ws://localhost:8002/ws/risk-stream"; // was 8000
+const SOCKET_URL = "ws://127.0.0.1:8002/ws/risk-stream";
 
 export function useRiskStream() {
   const [decision, setDecision] = useState(mockDecision);
-  const [status, setStatus] = useState(USE_MOCK ? "mock" : "connecting"); // mock | connecting | connected | error
+
+  const [status, setStatus] = useState(
+    USE_MOCK ? "mock" : "connecting"
+  );
+
   const wsRef = useRef(null);
 
+
   useEffect(() => {
+
     if (USE_MOCK) {
-      const interval = setInterval(() => {
-        setDecision((prev) => {
-          const jitter = (Math.random() - 0.5) * 0.05;
-          const newScore = Math.min(1, Math.max(0, prev.fused_score + jitter));
-          return { ...prev, fused_score: newScore };
-        });
-      }, 300);
-      return () => clearInterval(interval);
+      return;
     }
 
     const ws = new WebSocket(SOCKET_URL);
+
     wsRef.current = ws;
 
-    ws.onopen = () => setStatus("connected");
+
+    ws.onopen = () => {
+      setStatus("connected");
+    };
+
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+
         setDecision(data);
+
       } catch (err) {
-        console.error("Failed to parse risk stream message:", err);
+        console.error(
+          "Failed to parse risk stream message:",
+          err
+        );
       }
     };
 
-    ws.onerror = () => setStatus("error");
-    ws.onclose = () => setStatus("error");
+
+    ws.onerror = () => {
+      setStatus("error");
+    };
+
+
+    ws.onclose = () => {
+      setStatus("error");
+    };
+
 
     return () => ws.close();
+
   }, []);
 
-  return { decision, status };
+
+  // ===============================
+  // DEMO CONTROLS
+  // ===============================
+
+  const setDemoScenario = (scenario) => {
+
+    if (scenario === "real") {
+      setDecision({
+        ...demoRealDecision,
+        timestamp: new Date().toISOString()
+      });
+
+    } else if (scenario === "clone") {
+      setDecision({
+        ...demoCloneDecision,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+  };
+
+
+  return {
+    decision,
+    status,
+    setDemoScenario
+  };
 }
