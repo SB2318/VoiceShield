@@ -8,7 +8,7 @@ from pathlib import Path
 import logging
 from speechbrain.inference.speaker import EncoderClassifier
 from speechbrain.utils.fetching import LocalStrategy
-from ml.training.train_fusion_real import MultiViewModel, N_LFCC
+from ml.training.train_fusion_real import MultiViewModel, N_MFCC
 from ml.datasets.multiview_real_dataset import feature_extractor, ssl_model, FIXED_LEN
 
 
@@ -78,15 +78,15 @@ def extract_views(waveform):
     fixed = librosa.util.fix_length(waveform, size=FIXED_LEN) if len(waveform) < FIXED_LEN else waveform[:FIXED_LEN]
     raw_tensor = torch.tensor(fixed, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
 
-    lfcc = librosa.feature.mfcc(y=waveform, sr=16000, n_mfcc=N_LFCC)
-    lfcc_tensor = torch.tensor(lfcc.mean(axis=1), dtype=torch.float32).unsqueeze(0)
+    mfcc = librosa.feature.mfcc(y=waveform, sr=16000, n_mfcc=N_MFCC)
+    mfcc_tensor = torch.tensor(mfcc.mean(axis=1), dtype=torch.float32).unsqueeze(0)
 
     inputs = feature_extractor(waveform, sampling_rate=16000, return_tensors="pt")
     with torch.no_grad():
         ssl_out = ssl_model(**inputs)
     ssl_tensor = ssl_out.last_hidden_state.mean(dim=1)
 
-    return raw_tensor, lfcc_tensor, ssl_tensor
+    return raw_tensor, mfcc_tensor, ssl_tensor
 
 def get_voiceprint_embedding(waveform):
     """Stage B: dedicated speaker-verification embedding via ECAPA-TDNN."""
@@ -111,10 +111,10 @@ async def detect(
     audio_bytes = await file.read()
     waveform, sr = librosa.load(io.BytesIO(audio_bytes), sr=16000)
 
-    raw, lfcc, ssl = extract_views(waveform)
+    raw, mfcc, ssl = extract_views(waveform)
     detection_model = get_model()
     with torch.no_grad():
-        logits, attn_weights = detection_model(raw, lfcc, ssl)
+        logits, attn_weights = detection_model(raw, mfcc, ssl)
         probs = torch.softmax(logits, dim=-1)
         confidence, predicted_class = torch.max(probs, dim=-1)
 
