@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "../../ui/Card";
 import { Label } from "../../ui/Label";
 import { Badge } from "../../ui/Badge";
@@ -8,14 +8,34 @@ import CallScreen from "../call/CallScreen";
 
 function VerifiedCallbackFlow() {
   const [step, setStep] = useState("risk");
-  const number = "+91 90000 11223"; // placeholder unknown caller
+  const number = "+91 90000 11223";
+
+  // Automatically transition from 'connecting' to 'protected' after 2.5 seconds
+  useEffect(() => {
+    if (step === "connecting") {
+      const timer = setTimeout(() => {
+        setStep("protected");
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
+
+  const handleReset = () => {
+    setStep("risk");
+  };
 
   if (step === "protected") {
     return (
       <div className="min-h-screen text-ink flex flex-col items-center gap-3 p-6 relative">
         <AuroraBackground />
-        <div className="relative z-10 w-full max-w-md text-center mb-2">
+        <div className="relative z-10 w-full max-w-md flex items-center justify-between mb-2">
           <Badge tone="verified">Screened via VoiceShield callback</Badge>
+          <button
+            onClick={handleReset}
+            className="text-xs font-semibold text-ink-soft hover:text-ink transition-colors underline"
+          >
+            Reset flow
+          </button>
         </div>
         <div className="relative z-10 w-full">
           <CallScreen embedded />
@@ -28,7 +48,6 @@ function VerifiedCallbackFlow() {
     <div className="min-h-screen text-ink flex flex-col items-center justify-center gap-7 p-6 relative">
       <AuroraBackground />
       <div className="w-full max-w-md flex flex-col items-center gap-6 relative z-10">
-
         {step === "risk" && (
           <>
             <Label>Incoming call</Label>
@@ -43,7 +62,9 @@ function VerifiedCallbackFlow() {
               </p>
             </Card>
             <div className="flex gap-3 w-full">
-              <Button variant="outline" className="flex-1">Answer anyway</Button>
+              <Button variant="outline" className="flex-1" onClick={() => setStep("protected")}>
+                Answer anyway
+              </Button>
               <Button variant="primary" className="flex-1" onClick={() => setStep("guidance")}>
                 Verify first
               </Button>
@@ -81,4 +102,5 @@ function VerifiedCallbackFlow() {
     </div>
   );
 }
+
 export default VerifiedCallbackFlow;
