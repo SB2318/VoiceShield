@@ -1,0 +1,17 @@
+fastapi==0.141.1
+uvicorn==0.52.4
+python-multipart==0.0.32
+httpx==0.28.1
+websockets==16.1.1
+webrtcvad==2.0.10
+numpy==2.2.6
+scikit-learn==1.7.2
+librosa==0.11.0
+soundfile==0.14.0
+pydub==0.25.1
+torch==2.13.0
+torchaudio==2.11.0
+transformers==5.16.1
+speechbrain==1.1.1
+onnx==1.22.0
+onnxruntime==1.23.2
