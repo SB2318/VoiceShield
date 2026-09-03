@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mockCallFeed, mockMetrics } from "../../fixtures/decisions";
+import { useRiskStream } from "../../hooks/useRiskStream";
 import CallFeedRow from "./CallFeedRow";
 import MetricsPanel from "./MetricsPanel";
 import CodecChart from "./CodecChart";
@@ -8,7 +9,38 @@ import { AuroraBackground } from "../../ui/AuroraBackground";
 
 function Dashboard() {
   const [feed, setFeed] = useState(mockCallFeed);
-  const handleOverride = (id, action) => console.log(`Call ${id} -> ${action}`);
+  const { decision } = useRiskStream();
+
+  // Automatically prepend new incoming call decisions onto the live feed
+  useEffect(() => {
+    if (!decision || !decision.call_id) return;
+
+    setFeed((prevFeed) => {
+      // Avoid duplicate entries if the same call ID arrives
+      const exists = prevFeed.some((item) => item.call_id === decision.call_id);
+      if (exists) {
+        return prevFeed.map((item) =>
+          item.call_id === decision.call_id ? { ...item, ...decision } : item
+        );
+      }
+      return [decision, ...prevFeed];
+    });
+  }, [decision]);
+
+  // Handle analyst overrides (e.g., manually marking a call as 'real' or 'flagged')
+  const handleOverride = (id, action) => {
+    setFeed((prevFeed) =>
+      prevFeed.map((call) =>
+        call.call_id === id
+          ? {
+              ...call,
+              decision: action === "verify" ? "real" : "suspected_clone",
+              overrideBy: "Analyst",
+            }
+          : call
+      )
+    );
+  };
 
   return (
     <div className="min-h-screen text-ink p-8 md:p-12 flex flex-col gap-10 relative">
@@ -28,13 +60,21 @@ function Dashboard() {
         <MetricsPanel metrics={mockMetrics} />
         <CodecChart />
         <div>
-          <Label className="mb-3">Live flagged calls</Label>
+          <div className="flex items-center justify-between mb-3">
+            <Label>Live flagged calls</Label>
+            <span className="text-xs font-mono text-ink-soft">
+              {feed.length} total recorded calls
+            </span>
+          </div>
           <div className="flex flex-col gap-3">
-            {feed.map((call) => <CallFeedRow key={call.call_id} call={call} onOverride={handleOverride} />)}
+            {feed.map((call) => (
+              <CallFeedRow key={call.call_id} call={call} onOverride={handleOverride} />
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default Dashboard;
