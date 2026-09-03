@@ -4,10 +4,15 @@ Backend 2 — calls Backend 1's detection service (ml/api/detection_service.py)
 with a raw audio chunk and gets back the risk decision.
 """
 
+import os
 import httpx
 
-DETECTION_SERVICE_URL = "http://127.0.0.1:8000/detect"  # confirm actual port with Backend 1
-
+# Configurable via environment variable so this isn't hardwired to one machine's
+# setup - Docker, CI, or a teammate's local ports can all override this without
+# touching code. Falls back to local-dev default if unset.
+DETECTION_SERVICE_BASE_URL = os.environ.get("DETECTION_SERVICE_BASE_URL", "http://127.0.0.1:8000")
+DETECTION_SERVICE_URL = f"{DETECTION_SERVICE_BASE_URL}/detect"
+DETECTION_SERVICE_HEALTH_URL = f"{DETECTION_SERVICE_BASE_URL}/health"
 
 async def score_chunk(audio_bytes: bytes, filename: str = "chunk.wav") -> dict:
     """
@@ -26,7 +31,7 @@ async def health_check() -> bool:
     """Confirm Backend 1's service is reachable before starting the pipeline."""
     try:
         async with httpx.AsyncClient(timeout=2.0) as client:
-            response = await client.get("http://127.0.0.1:8000/health")
+            response = await client.get(DETECTION_SERVICE_HEALTH_URL)
             return response.status_code == 200
     except httpx.HTTPError:
         return False
