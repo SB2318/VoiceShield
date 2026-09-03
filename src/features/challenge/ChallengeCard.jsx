@@ -13,6 +13,11 @@ function ChallengeCard({ challengeType, onResult }) {
     <Card className="w-full max-w-xs flex flex-col items-center gap-4 text-center">
       <Label>{challenge.title}</Label>
       <p className="text-ink font-semibold leading-snug">{challenge.prompt}</p>
+      <p className="text-xs text-ink-soft mt-3 leading-relaxed">
+        Your spoken response is transcribed to verify liveness. In this build,
+        transcription uses a cloud speech service. Production runs on-device
+        (Whisper.cpp / Vosk) — no audio leaves your phone.
+      </p>
       {result === "not_triggered" && (
         <div className="flex gap-3 w-full">
           <Button variant="sage" className="flex-1" onClick={() => { setResult("pass"); onResult?.("pass"); }}>Simulate pass</Button>

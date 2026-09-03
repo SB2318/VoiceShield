@@ -48,9 +48,14 @@ function PanicCard() {
           </div>
         )}
       </div>
-      <div className="bg-raised/60 border border-hairline rounded-xl p-4 flex items-center justify-between">
-        <p className="text-ink text-sm font-medium">Notify a trusted contact quietly</p>
-        <Button variant="outline">Notify</Button>
+            <div className="bg-raised/60 border border-hairline rounded-xl p-4">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-ink text-sm font-medium">Notify a trusted contact quietly</p>
+          <Button variant="outline">Notify</Button>
+        </div>
+        <p className="text-xs text-ink-soft mt-3 leading-relaxed">
+          Only the call time, number, and risk decision are shared — never the call audio.
+        </p>
       </div>
       <div className="text-center">
         <button disabled={cooldown > 0}
