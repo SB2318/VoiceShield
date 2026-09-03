@@ -251,3 +251,4 @@ ml/data/
 *.onnx.data
 *.pt
 *.pth
+ml/export/speechbrain_ecapa/
