@@ -1,24 +1,67 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from typing import Optional
 import torch
 import torch.nn as nn
 import librosa
 import io
+from pathlib import Path
+import logging
 from speechbrain.inference.speaker import EncoderClassifier
 from speechbrain.utils.fetching import LocalStrategy
 from ml.training.train_fusion_real import MultiViewModel, N_LFCC
 from ml.datasets.multiview_real_dataset import feature_extractor, ssl_model, FIXED_LEN
 
 
-MODEL_PATH = "ml/export/fusion_model_real.pt"
+ML_DIR = Path(__file__).resolve().parents[1]
+
+MODEL_PATH = ML_DIR / "export" / "fusion_model_real.pt"
+
 CONFIDENCE_THRESHOLD = 0.65
-SPEAKER_MATCH_THRESHOLD = 0.55  # ECAPA cosine similarities run lower than wav2vec2's did — recalibrated below
+SPEAKER_MATCH_THRESHOLD = 0.55
 
 app = FastAPI(title="VoiceShield Detection Service")
 
-model = MultiViewModel()
-model.load_state_dict(torch.load(MODEL_PATH))
-model.eval()
+logger = logging.getLogger(__name__)
+
+model = None
+
+
+def get_model():
+    global model
+
+    if model is None:
+        try:
+            loaded_model = MultiViewModel()
+
+            state_dict = torch.load(
+                MODEL_PATH,
+                map_location="cpu",
+                weights_only=True,
+            )
+
+            loaded_model.load_state_dict(state_dict)
+            loaded_model.eval()
+
+            model = loaded_model
+
+        except FileNotFoundError:
+            logger.exception(
+                "Detection model checkpoint not found: %s",
+                MODEL_PATH,
+            )
+            raise HTTPException(
+                status_code=503,
+                detail="Detection model is unavailable.",
+            )
+
+        except Exception:
+            logger.exception("Failed to load detection model")
+            raise HTTPException(
+                status_code=503,
+                detail="Detection model could not be loaded.",
+            )
+
+    return model
 
 # Dedicated speaker-verification model — separate from the spoof-detection SSL branch.
 # ECAPA-TDNN is trained specifically to isolate speaker identity, unlike general wav2vec2.
@@ -69,8 +112,9 @@ async def detect(
     waveform, sr = librosa.load(io.BytesIO(audio_bytes), sr=16000)
 
     raw, lfcc, ssl = extract_views(waveform)
+    detection_model = get_model()
     with torch.no_grad():
-        logits, attn_weights = model(raw, lfcc, ssl)
+        logits, attn_weights = detection_model(raw, lfcc, ssl)
         probs = torch.softmax(logits, dim=-1)
         confidence, predicted_class = torch.max(probs, dim=-1)
 
